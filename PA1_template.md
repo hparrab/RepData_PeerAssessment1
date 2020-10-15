@@ -11,7 +11,7 @@ unlink(temp)
 AMD$date <- as.Date(AMD$date)
 ```
 
-## histogram of the total number of steps taken each day
+## Histogram of the total number of steps taken each day
 
 ```r
 AMD_by_day <- aggregate(AMD$steps, by = list(AMD$date), FUN = sum)
@@ -139,14 +139,19 @@ AMD2$weekd <- mgsub(AMD2$weekd, c("sábado","domingo"), c("weekend","weekend"))
 ## Panel plot containing a time series plot 5-minute interval vs. average number of steps taken, averaged across all weekdays or weekends
 
 ```r
+#subset dataframes with weekdays and weekends only
 subsetweekday <- subset(AMD2, weekd != "weekend")
 subsetweekend <- subset(AMD2, weekd != "weekday")
+# find yhe average steps by interval for each subset
 subsetweekday_av <- aggregate(subsetweekday$steps, by = list(subsetweekday$interval), FUN = mean)
 subsetweekend_av <- aggregate(subsetweekend$steps, by = list(subsetweekend$interval), FUN = mean)
+# add the factor variable to each subset
 subsetweekday_av$type <- "weekday"
 subsetweekend_av$type <- "weekend"
+# join both subsets that contain the factor
 all_week <- rbind(subsetweekday_av,subsetweekend_av)
 library(lattice)
+# make the plot with the time series
 xyplot(all_week$x ~ all_week$Group.1 | all_week$type, layout = c(1, 2), type = "l", xlab = "step 5 min. interval", ylab = "average steps")
 ```
 
